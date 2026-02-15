@@ -59,15 +59,30 @@ const SERVICE_ACCOUNT_PATH = path.join(__dirname, 'service-account.json');
  */
 async function getDriveClient() {
   try {
-    // Check if service account file exists
-    if (!fs.existsSync(SERVICE_ACCOUNT_PATH)) {
-      console.warn('⚠️  service-account.json not found. Google Drive integration disabled.');
-      console.warn('   Follow the instructions in googleDrive.js to set up the service account.');
+    let credentials;
+    
+    // Check if credentials are in environment variable (for Render/Production)
+    if (process.env.GOOGLE_SERVICE_ACCOUNT) {
+      console.log('✓ Using Google Drive credentials from environment variable');
+      try {
+        credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
+      } catch (parseError) {
+        console.error('❌ Failed to parse GOOGLE_SERVICE_ACCOUNT environment variable:', parseError.message);
+        return null;
+      }
+    } 
+    // Fallback to file (for local development)
+    else if (fs.existsSync(SERVICE_ACCOUNT_PATH)) {
+      console.log('✓ Using Google Drive credentials from service-account.json file');
+      credentials = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_PATH, 'utf8'));
+    } 
+    // No credentials found
+    else {
+      console.warn('⚠️  Google Drive credentials not found.');
+      console.warn('   For production: Set GOOGLE_SERVICE_ACCOUNT environment variable');
+      console.warn('   For local: Add service-account.json to /server directory');
       return null;
     }
-
-    // Load service account credentials
-    const credentials = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_PATH, 'utf8'));
 
     // Create auth client
     const auth = new google.auth.GoogleAuth({
@@ -81,6 +96,7 @@ async function getDriveClient() {
     // Create Drive API client
     const drive = google.drive({ version: 'v3', auth: authClient });
 
+    console.log('✓ Google Drive API client initialized successfully');
     return drive;
   } catch (error) {
     console.error('❌ Error initializing Google Drive client:', error.message);
