@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-en="Product Catalog" data-lang-ar="كتالوج المنتجات">Product Catalog</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="bg-primary text-white py-4 mb-4 no-print">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <img id="companyLogo" src="" alt="Company Logo" class="me-3" style="max-height: 80px; display: none;">
+                        <div>
+                            <h1 class="mb-0" data-lang-en="Product Catalog" data-lang-ar="كتالوج المنتجات">Product Catalog</h1>
+                            <p class="mb-0 mt-1" data-lang-en="Browse our complete product range" data-lang-ar="تصفح مجموعة منتجاتنا الكاملة">Browse our complete product range</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <!-- Language Toggle -->
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-light" onclick="switchLanguage('en')" id="btnEn">English</button>
+                        <button type="button" class="btn btn-outline-light" onclick="switchLanguage('ar')" id="btnAr">العربية</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Controls Bar -->
+        <div class="row mb-4 no-print">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <!-- Brand Filter -->
+                            <div class="col-md-3">
+                                <label class="form-label" data-lang-en="Filter by Brand" data-lang-ar="تصفية حسب العلامة التجارية">Filter by Brand</label>
+                                <select id="brandFilter" class="form-select">
+                                    <option value="" data-lang-en="All Brands" data-lang-ar="جميع العلامات التجارية">All Brands</option>
+                                </select>
+                            </div>
+
+                            <!-- Sort By -->
+                            <div class="col-md-3">
+                                <label class="form-label" data-lang-en="Sort By" data-lang-ar="الترتيب حسب">Sort By</label>
+                                <select id="sortBy" class="form-select">
+                                    <option value="name" data-lang-en="Name" data-lang-ar="الاسم">Name</option>
+                                    <option value="brand" data-lang-en="Brand" data-lang-ar="العلامة التجارية">Brand</option>
+                                    <option value="price-asc" data-lang-en="Price (Low to High)" data-lang-ar="السعر (من الأقل إلى الأعلى)">Price (Low to High)</option>
+                                    <option value="price-desc" data-lang-en="Price (High to Low)" data-lang-ar="السعر (من الأعلى إلى الأقل)">Price (High to Low)</option>
+                                </select>
+                            </div>
+
+                            <!-- Search -->
+                            <div class="col-md-4">
+                                <label class="form-label" data-lang-en="Search Products" data-lang-ar="البحث عن المنتجات">Search Products</label>
+                                <input type="text" id="searchInput" class="form-control" placeholder="Search..." data-placeholder-en="Search..." data-placeholder-ar="بحث...">
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-primary w-100" onclick="window.print()">
+                                    <i class="bi bi-printer me-1"></i>
+                                    <span data-lang-en="Print PDF" data-lang-ar="طباعة PDF">Print PDF</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Print Header (Only visible when printing) -->
+        <div class="print-only text-center mb-4">
+            <img id="printLogo" src="" alt="Company Logo" style="max-height: 100px;">
+            <h1 class="mt-3" data-lang-en="Product Catalog" data-lang-ar="كتالوج المنتجات">Product Catalog</h1>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="row" id="productsContainer">
+            <!-- Products will be loaded here dynamically -->
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2" data-lang-en="Loading products..." data-lang-ar="جاري تحميل المنتجات...">Loading products...</p>
+        </div>
+
+        <!-- No Products Message -->
+        <div id="noProductsMessage" class="alert alert-info text-center" style="display: none;">
+            <i class="bi bi-info-circle me-2"></i>
+            <span data-lang-en="No products found" data-lang-ar="لم يتم العثور على منتجات">No products found</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5 no-print">
+        <div class="container text-center">
+            <p class="mb-0 text-muted">
+                <span data-lang-en="© 2024 Product Catalog. All rights reserved." data-lang-ar="© 2024 كتالوج المنتجات. جميع الحقوق محفوظة.">© 2024 Product Catalog. All rights reserved.</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/script.js"></script>
+</body>
+</html>

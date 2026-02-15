@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-en="Admin Panel - Product Catalog" data-lang-ar="لوحة الإدارة - كتالوج المنتجات">Admin Panel - Product Catalog</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" data-lang-en="Admin Login" data-lang-ar="تسجيل دخول الإدارة">Admin Login</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label" data-lang-en="Username" data-lang-ar="اسم المستخدم">Username</label>
+                            <input type="text" class="form-control" id="loginUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" data-lang-en="Password" data-lang-ar="كلمة المرور">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div id="loginError" class="alert alert-danger" style="display: none;"></div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <span data-lang-en="Login" data-lang-ar="تسجيل الدخول">Login</span>
+                        </button>
+                    </form>
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <span data-lang-en="Default: admin / admin123" data-lang-ar="افتراضي: admin / admin123">Default: admin / admin123</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden until logged in) -->
+    <div id="mainContent" style="display: none;">
+        <!-- Header -->
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    <span data-lang-en="Admin Panel" data-lang-ar="لوحة الإدارة">Admin Panel</span>
+                </span>
+                <div class="d-flex align-items-center">
+                    <!-- Language Toggle -->
+                    <div class="btn-group me-3" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-light" onclick="switchLanguage('en')" id="btnEn">EN</button>
+                        <button type="button" class="btn btn-sm btn-light" onclick="switchLanguage('ar')" id="btnAr">AR</button>
+                    </div>
+                    <span class="text-white me-3" id="welcomeMessage"></span>
+                    <button class="btn btn-outline-light btn-sm me-2" onclick="window.open('/', '_blank')">
+                        <i class="bi bi-box-arrow-up-right me-1"></i>
+                        <span data-lang-en="View Catalog" data-lang-ar="عرض الكتالوج">View Catalog</span>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="logout()">
+                        <i class="bi bi-box-arrow-right me-1"></i>
+                        <span data-lang-en="Logout" data-lang-ar="تسجيل الخروج">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid py-4">
+            <!-- Tabs Navigation -->
+            <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button">
+                        <i class="bi bi-box-seam me-1"></i>
+                        <span data-lang-en="Products" data-lang-ar="المنتجات">Products</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button">
+                        <i class="bi bi-gear me-1"></i>
+                        <span data-lang-en="Settings" data-lang-ar="الإعدادات">Settings</span>
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="adminTabsContent">
+                <!-- Products Tab -->
+                <div class="tab-pane fade show active" id="products" role="tabpanel">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <span data-lang-en="Product Management" data-lang-ar="إدارة المنتجات">Product Management</span>
+                                    </h5>
+                                    <div>
+                                        <button class="btn btn-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                            <i class="bi bi-plus-circle me-1"></i>
+                                            <span data-lang-en="Add Product" data-lang-ar="إضافة منتج">Add Product</span>
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#importExcelModal">
+                                            <i class="bi bi-file-earmark-excel me-1"></i>
+                                            <span data-lang-en="Import Excel" data-lang-ar="استيراد Excel">Import Excel</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th data-lang-en="Code" data-lang-ar="الكود">Code</th>
+                                                    <th data-lang-en="Name (EN)" data-lang-ar="الاسم (EN)">Name (EN)</th>
+                                                    <th data-lang-en="Name (AR)" data-lang-ar="الاسم (AR)">Name (AR)</th>
+                                                    <th data-lang-en="Brand" data-lang-ar="العلامة">Brand</th>
+                                                    <th data-lang-en="Price" data-lang-ar="السعر">Price</th>
+                                                    <th data-lang-en="Image" data-lang-ar="الصورة">Image</th>
+                                                    <th data-lang-en="Actions" data-lang-ar="الإجراءات">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="productsTableBody">
+                                                <!-- Products will be loaded here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="noProducts" class="text-center py-4" style="display: none;">
+                                        <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                                        <p class="text-muted mt-2" data-lang-en="No products yet. Add your first product!" data-lang-ar="لا توجد منتجات بعد. أضف منتجك الأول!">No products yet. Add your first product!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="settings" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-image me-2"></i>
+                                        <span data-lang-en="Company Logo" data-lang-ar="شعار الشركة">Company Logo</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3" id="currentLogoContainer">
+                                        <p class="text-muted" data-lang-en="No logo uploaded" data-lang-ar="لم يتم تحميل شعار">No logo uploaded</p>
+                                    </div>
+                                    <form id="logoUploadForm">
+                                        <div class="mb-3">
+                                            <label class="form-label" data-lang-en="Upload New Logo" data-lang-ar="تحميل شعار جديد">Upload New Logo</label>
+                                            <input type="file" class="form-control" id="logoFile" accept="image/*" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-upload me-1"></i>
+                                            <span data-lang-en="Upload Logo" data-lang-ar="تحميل الشعار">Upload Logo</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalTitle" data-lang-en="Add Product" data-lang-ar="إضافة منتج">Add Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-lang-en="Product Code" data-lang-ar="كود المنتج">Product Code</label>
+                                <input type="text" class="form-control" id="productCode" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-lang-en="Price" data-lang-ar="السعر">Price</label>
+                                <input type="number" step="0.01" class="form-control" id="productPrice" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-lang-en="Name (English)" data-lang-ar="الاسم (إنجليزي)">Name (English)</label>
+                                <input type="text" class="form-control" id="productNameEn" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-lang-en="Name (Arabic)" data-lang-ar="الاسم (عربي)">Name (Arabic)</label>
+                                <input type="text" class="form-control" id="productNameAr" dir="rtl">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-lang-en="Brand (English)" data-lang-ar="العلامة (إنجليزي)">Brand (English)</label>
+                                <input type="text" class="form-control" id="productBrandEn" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-lang-en="Brand (Arabic)" data-lang-ar="العلامة (عربي)">Brand (Arabic)</label>
+                                <input type="text" class="form-control" id="productBrandAr" dir="rtl">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-lang-en="Description (English)" data-lang-ar="الوصف (إنجليزي)">Description (English)</label>
+                                <textarea class="form-control" id="productDescEn" rows="3"></textarea>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-lang-en="Description (Arabic)" data-lang-ar="الوصف (عربي)">Description (Arabic)</label>
+                                <textarea class="form-control" id="productDescAr" rows="3" dir="rtl"></textarea>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" data-lang-en="Image URL" data-lang-ar="رابط الصورة">Image URL</label>
+                            <input type="url" class="form-control" id="productImageUrl" placeholder="https://...">
+                            <small class="text-muted" data-lang-en="Leave empty to auto-fetch from Google Drive" data-lang-ar="اتركه فارغًا للجلب التلقائي من Google Drive">Leave empty to auto-fetch from Google Drive</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-lang-en="Cancel" data-lang-ar="إلغاء">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">
+                        <span data-lang-en="Save Product" data-lang-ar="حفظ المنتج">Save Product</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Excel Modal -->
+    <div class="modal fade" id="importExcelModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" data-lang-en="Import Products from Excel" data-lang-ar="استيراد المنتجات من Excel">Import Products from Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="excelImportForm">
+                        <div class="mb-3">
+                            <label class="form-label" data-lang-en="Excel File" data-lang-ar="ملف Excel">Excel File</label>
+                            <input type="file" class="form-control" id="excelFile" accept=".xlsx,.xls,.csv" required>
+                            <small class="text-muted">
+                                <span data-lang-en="Columns: code, name_en, name_ar, brand_en, brand_ar, price, description_en, description_ar" 
+                                      data-lang-ar="الأعمدة: code, name_en, name_ar, brand_en, brand_ar, price, description_en, description_ar">
+                                    Columns: code, name_en, name_ar, brand_en, brand_ar, price, description_en, description_ar
+                                </span>
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" data-lang-en="Google Drive Folder ID (Optional)" data-lang-ar="معرف مجلد Google Drive (اختياري)">Google Drive Folder ID (Optional)</label>
+                            <input type="text" class="form-control" id="folderId" placeholder="1AbC...xyz">
+                            <small class="text-muted">
+                                <span data-lang-en="For automatic image linking from Google Drive" data-lang-ar="للربط التلقائي للصور من Google Drive">
+                                    For automatic image linking from Google Drive
+                                </span>
+                            </small>
+                        </div>
+                        <div id="importProgress" style="display: none;">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+                            </div>
+                            <p class="text-center mt-2" data-lang-en="Importing products..." data-lang-ar="جاري استيراد المنتجات...">Importing products...</p>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-lang-en="Cancel" data-lang-ar="إلغاء">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="importExcel()">
+                        <i class="bi bi-upload me-1"></i>
+                        <span data-lang-en="Import" data-lang-ar="استيراد">Import</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/admin.js"></script>
+</body>
+</html>

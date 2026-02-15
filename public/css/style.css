@@ -1,0 +1,215 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Arabic Font Support */
+body[dir="rtl"],
+[dir="rtl"] {
+    font-family: 'Segoe UI', 'Arabic UI', Tahoma, Arial, sans-serif;
+}
+
+/* Product Card Styles */
+.product-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 30px;
+    height: 100%;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.product-image {
+    height: 250px;
+    object-fit: contain;
+    width: 100%;
+    padding: 15px;
+    background-color: #fff;
+}
+
+.product-code {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.product-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #212529;
+    min-height: 50px;
+}
+
+.product-brand {
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+.product-price {
+    font-size: 1.4rem;
+    color: #198754;
+    font-weight: 700;
+}
+
+.product-description {
+    font-size: 0.9rem;
+    color: #6c757d;
+    max-height: 60px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* No Image Placeholder */
+.no-image {
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    color: #adb5bd;
+    font-size: 3rem;
+}
+
+/* Language Toggle */
+.btn-group .btn {
+    min-width: 60px;
+}
+
+/* RTL Support */
+[dir="rtl"] .card-body {
+    text-align: right;
+}
+
+[dir="rtl"] .btn-group {
+    direction: ltr;
+}
+
+/* ================================================
+   PRINT STYLES - For PDF Export
+   ================================================ */
+
+@media print {
+    /* Hide non-essential elements */
+    .no-print,
+    header,
+    footer,
+    .btn,
+    button,
+    .form-control,
+    .form-select,
+    nav,
+    .navbar,
+    .card .card-body .row.g-3 {
+        display: none !important;
+    }
+
+    /* Show print-only elements */
+    .print-only {
+        display: block !important;
+    }
+
+    /* Page setup */
+    @page {
+        size: A4;
+        margin: 1.5cm;
+    }
+
+    body {
+        background-color: white;
+        font-size: 11pt;
+    }
+
+    /* Container adjustments */
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    /* Product cards for print */
+    .product-card {
+        page-break-inside: avoid;
+        margin-bottom: 15px;
+        box-shadow: none;
+        border: 1px solid #dee2e6;
+    }
+
+    .product-image {
+        height: 180px;
+        padding: 10px;
+    }
+
+    .product-name {
+        font-size: 10pt;
+        min-height: auto;
+    }
+
+    .product-brand {
+        font-size: 9pt;
+    }
+
+    .product-price {
+        font-size: 12pt;
+    }
+
+    .product-code {
+        font-size: 8pt;
+    }
+
+    .product-description {
+        font-size: 8pt;
+        max-height: none;
+    }
+
+    /* Grid layout for print */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .col-md-3,
+    .col-lg-3 {
+        width: 50% !important;
+        float: left;
+    }
+
+    /* Print header */
+    .print-only h1 {
+        font-size: 24pt;
+        margin-bottom: 20px;
+    }
+
+    /* Remove hover effects */
+    .product-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* Hide print-only elements on screen */
+.print-only {
+    display: none;
+}
+
+/* Loading spinner */
+#loadingSpinner {
+    min-height: 300px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .product-name {
+        font-size: 1rem;
+        min-height: auto;
+    }
+
+    .product-price {
+        font-size: 1.2rem;
+    }
+
+    .product-image {
+        height: 200px;
+    }
+}
